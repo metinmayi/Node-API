@@ -18,7 +18,7 @@ router.get("/", (request, response) => {
 			.collection("users")
 			.find()
 			.toArray();
-		response.send(result[0].username);
+		response.send(result);
 	})();
 });
 
