@@ -11,21 +11,46 @@ mongoClient.connect(() => {
 
 const router = express.Router();
 
-router.get("/", (request, response) => {
-	(async function () {
+router.get("/", async (request, response) => {
+	try {
 		const result = await mongoClient
 			.db("listify")
 			.collection("users")
 			.find()
 			.toArray();
 		response.send(result);
-	})();
-});
 
+		console.log(request.params);
+	} catch (error) {
+		response.send(error);
+	}
+});
+router.get("/:username", async (request, response) => {
+	try {
+		console.log(request.params.username);
+		const result = await mongoClient
+			.db("listify")
+			.collection("users")
+			.findOne({ username: request.params.username });
+		response.send(result);
+	} catch (error) {
+		response.send(request.params + "Failed");
+	}
+});
 router.post("/", (request, response) => {
 	console.log(request.body);
-	response.send("You sent a POST request");
-	mongoClient.db("listify").collection("users").insertOne(request.body);
+	if (request.body.username && request.body.password) {
+		const newUsername = request.body.username.toLowerCase();
+		const newUser = {
+			username: newUsername,
+			password: request.body.password,
+		};
+		console.log(request.body);
+		response.send(newUser);
+		mongoClient.db("listify").collection("users").insertOne(newUser);
+		return;
+	}
+	response.send("You aint give me shit");
 });
 
 export default router;
