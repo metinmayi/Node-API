@@ -1,16 +1,9 @@
 import express from "express";
-import dotenv from "dotenv";
-dotenv.config();
-
-//MongoDB section
-import { MongoClient } from "mongodb";
-const mongoClient = new MongoClient(process.env.MONGODB_TOKEN);
-mongoClient.connect(() => {
-	console.log("Database is connected!");
-});
-
+import { validateRegistration } from "../validation.js";
+import { mongoClient } from "../index.js";
 const router = express.Router();
 
+//Returns a list of all users
 router.get("/", async (request, response) => {
 	try {
 		const result = await mongoClient
@@ -25,6 +18,7 @@ router.get("/", async (request, response) => {
 		response.send(error);
 	}
 });
+//Returns a specific user
 router.get("/:username", async (request, response) => {
 	try {
 		console.log(request.params.username);
@@ -37,20 +31,24 @@ router.get("/:username", async (request, response) => {
 		response.send(request.params + "Failed");
 	}
 });
-router.post("/", (request, response) => {
-	console.log(request.body);
-	if (request.body.username && request.body.password) {
-		const newUsername = request.body.username.toLowerCase();
-		const newUser = {
-			username: newUsername,
-			password: request.body.password,
-		};
-		console.log(request.body);
-		response.send(newUser);
-		mongoClient.db("listify").collection("users").insertOne(newUser);
+//Creates a new user
+router.post("/", async (request, response) => {
+	//Checks if the new user object is valid
+	const validation = await validateRegistration(request.body);
+	//If there's an error with the validation
+	if (validation.error) {
+		response.send(validation.error.details[0].message);
 		return;
 	}
-	response.send("You aint give me shit");
+	//If there's no error. Create a user and send it to the database
+	const newUsername = request.body.username.toLowerCase();
+	const newUser = {
+		username: newUsername,
+		password: request.body.password,
+	};
+	response.send("Created a new user");
+	await mongoClient.db("listify").collection("users").insertOne(newUser);
+	return;
 });
 
 export default router;

@@ -1,17 +1,8 @@
 import express from "express";
-import dotenv from "dotenv";
-
-dotenv.config();
-
-//MongoDB section
-import { MongoClient, ObjectId } from "mongodb";
-const mongoClient = new MongoClient(process.env.MONGODB_TOKEN);
-mongoClient.connect(() => {
-	console.log("Database is connected!");
-});
-
-//Finds all lists belonging to the username by username query.
+import { mongoClient } from "../index.js";
+import { ObjectId } from "mongodb";
 const router = express.Router();
+//Finds all lists belonging to the specified user
 router.get("/user/:username", async (req, res) => {
 	const username = req.params.username;
 	try {
@@ -26,9 +17,10 @@ router.get("/user/:username", async (req, res) => {
 		console.log(error);
 	}
 });
+//Deletes the user with the specified ID
 router.delete("/id/:id", async (req, res) => {
+	//Turn the ID into an ObjectId, to make sure it works towards MongoDB.
 	const id = new ObjectId(req.params.id);
-	//Delete the list by id
 	try {
 		await mongoClient
 			.db("listify")
@@ -43,7 +35,6 @@ router.delete("/id/:id", async (req, res) => {
 //Creates a new list for a user.
 router.post("/user/:username", async (req, res) => {
 	//If the input is invalid.
-
 	if (!req.body.username || !req.body.title) {
 		res.end("Invalid post");
 		return;
