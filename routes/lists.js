@@ -48,7 +48,11 @@ router.post("/user/:username", async (req, res) => {
 		res.end("Invalid post");
 		return;
 	}
-	const newList = { username: req.body.username, title: req.body.title };
+	const newList = {
+		username: req.body.username,
+		title: req.body.title,
+		items: [],
+	};
 	try {
 		await mongoClient
 			.db("listify")
