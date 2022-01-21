@@ -41,7 +41,7 @@ router.delete("/id/:id", async (req, res) => {
 	}
 });
 //Creates a new list for a user.
-router.post("/:username", async (req, res) => {
+router.post("/user/:username", async (req, res) => {
 	//If the input is invalid.
 
 	if (!req.body.username || !req.body.title) {
