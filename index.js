@@ -8,7 +8,7 @@ const app = express();
 const PORT = process.env.PORT;
 
 app.use(express.json());
-app.use(cors({ methods: ["GET", "POST"] }));
+app.use(cors({ methods: ["GET", "POST", "DELETE"] }));
 
 app.use("/users", usersRoutes);
 app.use("/lists", listsRoutes);

@@ -1,9 +1,10 @@
 import express from "express";
 import dotenv from "dotenv";
+
 dotenv.config();
 
 //MongoDB section
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 const mongoClient = new MongoClient(process.env.MONGODB_TOKEN);
 mongoClient.connect(() => {
 	console.log("Database is connected!");
@@ -11,7 +12,7 @@ mongoClient.connect(() => {
 
 //Finds all lists belonging to the username by username query.
 const router = express.Router();
-router.get("/:username", async (req, res) => {
+router.get("/user/:username", async (req, res) => {
 	const username = req.params.username;
 	try {
 		const userLists = await mongoClient
@@ -22,6 +23,20 @@ router.get("/:username", async (req, res) => {
 		res.send(userLists);
 	} catch (error) {
 		res.send("There was an issue resolving your request");
+		console.log(error);
+	}
+});
+router.delete("/id/:id", async (req, res) => {
+	const id = new ObjectId(req.params.id);
+	//Delete the list by id
+	try {
+		await mongoClient
+			.db("listify")
+			.collection("shoppinglists")
+			.deleteOne({ _id: id });
+		res.send("Deleted document with id: " + req.params.id);
+	} catch (error) {
+		res.send("There was an issue resolving your request.");
 		console.log(error);
 	}
 });
