@@ -56,7 +56,11 @@ app.post("/", async (req, res) => {
 		process.env.TOKEN_SECRET,
 		{ expiresIn: "1d" }
 	);
-	res.cookie("jwt", token, { httpOnly: true, maxAge: 10 * 1000 });
+	res.cookie("jwt", token, {
+		httpOnly: true,
+		maxAge: 10 * 1000,
+		sameSite: false,
+	});
 	res.json("Login successful");
 });
 
