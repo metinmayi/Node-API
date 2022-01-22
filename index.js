@@ -8,6 +8,10 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT;
 
+//Server Settings
+app.use(express.json());
+app.use(cors({ methods: ["GET", "POST", "DELETE"] }));
+
 //Creates a MongoDB client and connects it.
 export const mongoClient = new MongoClient(process.env.MONGODB_TOKEN);
 mongoClient.connect(() => {
@@ -20,9 +24,6 @@ app.use("/lists", listsRoutes);
 
 app.get("/", (request, response) => response.send("Hello from Homepage"));
 
-//Server Settings
-app.use(express.json());
-app.use(cors({ methods: ["GET", "POST", "DELETE"] }));
 //Start server
 app.listen(PORT, () => {
 	console.log(`Server Running on port: http://localhost:${PORT}`);
