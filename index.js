@@ -60,7 +60,7 @@ app.post("/", async (req, res) => {
 		httpOnly: true,
 		maxAge: 10 * 1000,
 		sameSite: false,
-		secure,
+		secure: true,
 	});
 	res.json("Login successful");
 });
