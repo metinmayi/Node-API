@@ -18,8 +18,6 @@ router.get("/", async (req, res) => {
 			.find()
 			.toArray();
 		res.send(result);
-
-		console.log(req.params);
 	} catch (error) {
 		res.send(error);
 	}
@@ -28,7 +26,6 @@ router.get("/", async (req, res) => {
 //Returns a specific user
 router.get("/getuser/:username", async (req, res) => {
 	try {
-		console.log(req.params.username);
 		const result = await mongoClient
 			.db("listify")
 			.collection("users")
