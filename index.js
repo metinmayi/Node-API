@@ -71,15 +71,14 @@ app.post("/login", async (req, res) => {
 
 //Logout
 app.get("/logout", async (req, res) => {
-	res.cookie("jwt", "", {
-		httpOnly: true,
-		maxAge: 1,
-		sameSite: "None",
-		secure: true,
-	});
-
-	res.redirect("/");
-	res.send("Logged you out");
+	res
+		.cookie("jwt", "", {
+			httpOnly: true,
+			maxAge: 1,
+			sameSite: "None",
+			secure: true,
+		})
+		.redirect("/");
 });
 
 //Routes
