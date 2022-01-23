@@ -77,8 +77,10 @@ app.get("/logout", async (req, res) => {
 		sameSite: "None",
 		secure: true,
 	});
-	res.redirect("/");
-	res.send("Logged you out");
+	setTimeout(() => {
+		res.redirect("/");
+		res.send("Logged you out");
+	}, 1000);
 });
 
 //Routes
