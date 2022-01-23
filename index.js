@@ -82,9 +82,11 @@ app.use("/lists", listsRoutes);
 
 //Checks if you're already logged in
 app.get("/loginStatus", async (req, res) => {
+	console.log(req.userID);
 	if (req.userID) {
 		res.send(req.userID);
 	}
+	res.status(404);
 });
 //Start server
 app.listen(PORT, () => {
