@@ -18,3 +18,12 @@ export const validateList = async (object) => {
 
 	return schema.validate(object);
 };
+
+export const validateLogin = async (object) => {
+	const schema = Joi.object({
+		username: Joi.string().required(),
+		password: Joi.string().required(),
+	});
+
+	return schema.validate(object);
+};

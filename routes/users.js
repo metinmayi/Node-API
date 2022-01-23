@@ -4,13 +4,19 @@ import { mongoClient } from "../index.js";
 import Jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
 const router = express.Router();
-// import cors from "cors";
-// router.use(cors({ credentials: true }));
+import cors from "cors";
+router.use(
+	cors({
+		origin: (origin, callback) => callback(null, true),
+		credentials: true,
+	})
+);
 
 //http://localhost:5000/users
 
 //Returns a list of all users
 router.get("/", async (req, res) => {
+	console.log(req.userID);
 	try {
 		const result = await mongoClient
 			.db("listify")
@@ -67,37 +73,6 @@ router.post("/register", async (req, res) => {
 	};
 	await mongoClient.db("listify").collection("users").insertOne(newUser);
 	res.send("Created a new user");
-});
-
-//Login a new user
-router.post("/login", async (req, res) => {
-	//Checks if that user exists
-	const user = await mongoClient
-		.db("listify")
-		.collection("users")
-		.findOne({ username: req.body.username.toLowerCase() });
-	if (!user) {
-		return res.status(400).send("That username is not registered.");
-	}
-
-	//Checks if the password is correct.
-	const validPassword = await bcryptjs.compare(
-		req.body.password,
-		user.password
-	);
-	//If password is incorrect
-	if (!validPassword) {
-		return res.status(400).send("The password did not match the username");
-	}
-
-	//Create and assign a JSON web token
-	const token = Jwt.sign(
-		{ username: req.body.username.toLowerCase() },
-		process.env.TOKEN_SECRET,
-		{ expiresIn: "1d" }
-	);
-	res.cookie("jwt", token, { httpOnly: true, maxAge: 10 * 1000 });
-	res.json("Login successful");
 });
 
 export default router;

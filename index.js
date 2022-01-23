@@ -6,6 +6,8 @@ import bcryptjs from "bcryptjs";
 import Jwt from "jsonwebtoken";
 import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
+import { verifyJWT } from "./middleware/verifyJWT.js";
+import { validateLogin } from "./validation.js";
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT;
@@ -25,12 +27,14 @@ mongoClient.connect(() => {
 	console.log("Database is connected!");
 });
 
-//Routes
-app.use("/users", usersRoutes);
-app.use("/lists", listsRoutes);
+//Login
+app.post("/login", async (req, res) => {
+	//Validates the login object
+	const validation = validateLogin(req.body);
+	if (validation.error) {
+		return res.status(400).send(validation.error.details[0].message);
+	}
 
-//login
-app.post("/", async (req, res) => {
 	//Checks if that user exists
 	const user = await mongoClient
 		.db("listify")
@@ -58,13 +62,30 @@ app.post("/", async (req, res) => {
 	);
 	res.cookie("jwt", token, {
 		httpOnly: true,
-		maxAge: 10 * 1000,
+		maxAge: 15 * 60 * 1000,
 		sameSite: "None",
 		secure: true,
 	});
 	res.json("Login successful");
 });
 
+//Logout
+app.get("/logout", async (req, res) => {
+	res.cookie("jwt", "", { maxAge: 1 });
+	res.send("Logged you out");
+});
+
+//Routes
+app.use(verifyJWT);
+app.use("/users", usersRoutes);
+app.use("/lists", listsRoutes);
+
+//Checks if you're already logged in
+app.get("/loginStatus", async (req, res) => {
+	if (req.userID) {
+		res.send(req.userID);
+	}
+});
 //Start server
 app.listen(PORT, () => {
 	console.log(`Server Running on port: http://localhost:${PORT}`);

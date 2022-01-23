@@ -2,8 +2,15 @@ import express from "express";
 import { mongoClient } from "../index.js";
 import { validateList } from "../validation.js";
 import { ObjectId } from "mongodb";
+import cors from "cors";
 
 const router = express.Router();
+router.use(
+	cors({
+		origin: (origin, callback) => callback(null, true),
+		credentials: true,
+	})
+);
 //Finds all lists belonging to the specified user
 
 //http://localhost:5000/lists
