@@ -77,6 +77,7 @@ app.get("/logout", async (req, res) => {
 		sameSite: "None",
 		secure: true,
 	});
+	res.redirect("/");
 	res.send("Logged you out");
 });
 
