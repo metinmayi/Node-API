@@ -71,7 +71,12 @@ app.post("/login", async (req, res) => {
 
 //Logout
 app.get("/logout", async (req, res) => {
-	res.cookie("jwt", "", { maxAge: 5000 });
+	res.cookie("jwt", " ", {
+		httpOnly: true,
+		maxAge: 10 * 1000,
+		sameSite: "None",
+		secure: true,
+	});
 	res.send("Logged you out");
 });
 
