@@ -73,7 +73,7 @@ app.post("/login", async (req, res) => {
 app.get("/logout", async (req, res) => {
 	res.cookie("jwt", "", {
 		httpOnly: true,
-		maxAge: 500,
+		maxAge: 1,
 		sameSite: "None",
 		secure: true,
 	});
