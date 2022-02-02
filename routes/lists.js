@@ -1,6 +1,6 @@
 import express from "express";
 import { mongoClient } from "../index.js";
-import { validateList } from "../validation.js";
+import { validateList, validateItem } from "../validation/validation.js";
 import { ObjectId } from "mongodb";
 import cors from "cors";
 
@@ -11,10 +11,9 @@ router.use(
 		credentials: true,
 	})
 );
-//Finds all lists belonging to the specified user
 
 //http://localhost:5000/lists
-
+//Finds all lists belonging to the specified user
 router.get("/getlists/:username", async (req, res) => {
 	const username = req.params.username;
 	try {
@@ -26,6 +25,20 @@ router.get("/getlists/:username", async (req, res) => {
 		res.send(userLists);
 	} catch (error) {
 		res.send("There was an issue resolving your request");
+		console.log(error);
+	}
+});
+
+//Finds a list by its ID
+router.get("/getlistbyid/:id", async (req, res) => {
+	try {
+		const id = new ObjectId(req.params.id);
+		const list = await mongoClient
+			.db("listify")
+			.collection("shoppinglists")
+			.findOne({ _id: id });
+		res.send(list);
+	} catch (error) {
 		console.log(error);
 	}
 });

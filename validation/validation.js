@@ -27,3 +27,12 @@ export const validateLogin = async (object) => {
 
 	return schema.validate(object);
 };
+
+export const validateItem = async (object) => {
+	const schema = Joi.object({
+		name: Joi.string().required(),
+		bought: Joi.boolean().required(),
+	});
+
+	return schema.validate(object);
+};

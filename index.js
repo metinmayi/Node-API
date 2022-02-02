@@ -2,12 +2,16 @@ import express from "express";
 import cors from "cors";
 import usersRoutes from "./routes/users.js";
 import listsRoutes from "./routes/lists.js";
+import itemsRoutes from "./routes/items.js";
 import bcryptjs from "bcryptjs";
 import Jwt from "jsonwebtoken";
 import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
 import { verifyJWT } from "./middleware/verifyJWT.js";
-import { validateLogin, validateRegistration } from "./validation.js";
+import {
+	validateLogin,
+	validateRegistration,
+} from "./validation/validation.js";
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT;
@@ -62,7 +66,7 @@ app.post("/login", async (req, res) => {
 	);
 	res.cookie("jwt", token, {
 		httpOnly: true,
-		maxAge: 60 * 60 * 1000,
+		maxAge: 60 * 15 * 1000,
 		sameSite: "None",
 		secure: true,
 	});
@@ -118,10 +122,11 @@ app.post("/register", async (req, res) => {
 app.use(verifyJWT);
 app.use("/users", usersRoutes);
 app.use("/lists", listsRoutes);
+app.use("/items", itemsRoutes);
 
 //Checks if you're already logged in
 app.get("/loginStatus", async (req, res) => {
-	console.log(req.userID);
+	// console.log(req.userID);
 	if (req.userID) {
 		res.send(req.userID);
 	}
