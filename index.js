@@ -83,6 +83,7 @@ app.get("/logout", async (req, res) => {
 			maxAge: 1,
 			sameSite: "None",
 			secure: true,
+			domain: "herokuapp.com",
 		})
 		.redirect("/");
 });
