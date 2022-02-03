@@ -33,6 +33,7 @@ mongoClient.connect(() => {
 
 //Login
 app.post("/login", async (req, res) => {
+	console.log("Login request");
 	//Validates the login object
 	const validation = validateLogin(req.body);
 	if (validation.error) {
@@ -75,6 +76,7 @@ app.post("/login", async (req, res) => {
 
 //Logout
 app.get("/logout", async (req, res) => {
+	console.log("Logout request");
 	res
 		.cookie("jwt", "", {
 			httpOnly: true,
