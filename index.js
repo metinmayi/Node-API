@@ -67,7 +67,7 @@ app.post("/login", async (req, res) => {
 	);
 	res.cookie("jwt", token, {
 		httpOnly: true,
-		maxAge: 60 * 60 * 15 * 1000,
+		maxAge: 60 * 60 * 1000,
 		sameSite: "None",
 		secure: true,
 	});
@@ -121,7 +121,7 @@ app.post("/register", async (req, res) => {
 });
 
 //Routes
-// app.use(verifyJWT);
+app.use(verifyJWT);
 app.use("/users", usersRoutes);
 app.use("/lists", listsRoutes);
 app.use("/items", itemsRoutes);
