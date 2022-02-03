@@ -70,7 +70,7 @@ app.post("/login", async (req, res) => {
 		maxAge: 60 * 60 * 1000,
 		sameSite: "none",
 		secure: true,
-		domain: ".heroku.com",
+		domain: ".herokuapp.com",
 	});
 	res.json("Login successful");
 });
@@ -84,7 +84,7 @@ app.get("/logout", async (req, res) => {
 			maxAge: 1,
 			sameSite: "None",
 			secure: true,
-			domain: ".heroku.com",
+			domain: ".herokuapp.com",
 		})
 		.redirect("/");
 });
