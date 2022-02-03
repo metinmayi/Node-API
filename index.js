@@ -121,7 +121,7 @@ app.post("/register", async (req, res) => {
 });
 
 //Routes
-app.use(verifyJWT);
+// app.use(verifyJWT);
 app.use("/users", usersRoutes);
 app.use("/lists", listsRoutes);
 app.use("/items", itemsRoutes);
