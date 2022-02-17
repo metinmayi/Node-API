@@ -3,7 +3,7 @@ import Joi from "joi";
 //Validates the new user registration object.
 export const validateRegistration = async (object) => {
 	const schema = Joi.object({
-		username: Joi.string().min(6).required(),
+		username: Joi.string().alphanum().min(3).max(10),
 		password: Joi.string().required(),
 	});
 
