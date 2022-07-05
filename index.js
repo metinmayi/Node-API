@@ -24,6 +24,7 @@ app.use(
     credentials: true,
   })
 );
+app.use(express.urlencoded({ extended: true }));
 
 //Creates a MongoDB client and connects it.
 export const mongoClient = new MongoClient(process.env.MONGODB_TOKEN);
@@ -124,15 +125,26 @@ app.post("/register", async (req, res) => {
 
 app.post("/rosterlist", async (req, res) => {
   try {
+    const name = req.body.name.toLowerCase();
+    const className = req.body.class.toLowerCase();
+    const role = req.body.role.toLowerCase();
+    const note = req.body.note.toLowerCase();
+    const playerName = req.body.playerName.toLowerCase();
     const player = {
-      name: req.body.name,
-      class: req.body.class,
-      role: req.body.role,
+      name,
+      class: className,
+      role,
+      note,
+      playerName,
     };
 
-    await mongoClient.db("wotlk").collection("rosterlist").insertOne(player);
-    return res.sendStatus(200);
+    const result = await mongoClient
+      .db("wotlk")
+      .collection("rosterlist")
+      .insertOne(player);
+    res.sendStatus(200);
   } catch (err) {
+    console.log(err);
     res.sendStatus(400);
   }
 });
