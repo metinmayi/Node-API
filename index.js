@@ -142,7 +142,8 @@ app.post("/rosterlist", async (req, res) => {
       .db("wotlk")
       .collection("rosterlist")
       .insertOne(player);
-    res.sendStatus(200);
+    player["_id"] = result.insertedId.toString();
+    res.send(player);
   } catch (err) {
     console.log(err);
     res.sendStatus(400);
